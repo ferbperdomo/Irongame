@@ -17,7 +17,6 @@ class OctoEnemy {
 
     draw() {
         this.ctx.drawImage(this.imageInstance, this.octoEnemyPos.x, this.octoEnemyPos.y, this.octoEnemySize.w, this.octoEnemySize.h)
-        console.log('tamañoooo:', this.octoEnemyPos.x, this.octoEnemyPos.y)
     }
 
     move(playerPos) {

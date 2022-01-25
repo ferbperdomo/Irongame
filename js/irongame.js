@@ -121,7 +121,6 @@ const irongame = {
     createOctoEnemy() {
         const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX('octo'), this.getRandomY('octo'), this.randomSize, this.randomSize, this.gameLimits, this.playerPos)
         this.octoEnemies.push(newEnemy)
-        console.log('PULPITOSSS',this.octoEnemies)
     },
     
     drawOctoEnemy() {
