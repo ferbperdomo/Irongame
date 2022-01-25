@@ -36,14 +36,17 @@ const irongame = {
     drawAll() {
         setInterval(() => {
             this.framesIndex++
-            this.framesIndex % 200 === 0 ? this.createPythonEnemy() : null
-            this.framesIndex % 200 === 0 ? this.createOctoEnemy() : null
+            this.framesIndex % 60 === 0 ? this.createPythonEnemy() : null
+            this.framesIndex % 20 === 0 ? this.createOctoEnemy() : null
             this.clearAll()
             this.drawBackgroud()
             this.drawPlayer()
             this.drawBonus()
             this.drawPythonEnemy()
             this.drawOctoEnemy()
+            this.checkPlayerPythonCollision()
+            this.checkPlayerOctoCollision()
+            this.checkBulletEnemyCollision()
             this.bullets.forEach((bullet) => {
                 bullet.drawBullets()
             })
@@ -68,7 +71,7 @@ const irongame = {
     },
 
     createPlayer() {
-        this.player = new Player (this.ctx, 100, 100, 50, 50)
+        this.player = new Player (this.ctx, 450, 250, 50, 50)
     },
 
     drawPlayer() {
@@ -78,6 +81,7 @@ const irongame = {
     clearAll() {
         this.ctx.clearRect(0, 0, this.gameSize.w, this.gameSize.h)
         this.clearBullets()
+        // console.log("BALASSSSSSS:", this.bullets);
     },
 
     setEventHandlers() {
@@ -97,9 +101,7 @@ const irongame = {
               x: Math.cos(angle),
               y: Math.sin(angle),
             };
-            this.bullets.push( new Bullets(this.ctx, event.clientX, event.clientY, this.player.playerSize.w, this.player.playerSize.h, speed, this.player.playerPos.x, this.player.playerPos.y
-              )
-            )
+            this.bullets.push( new Bullets(this.ctx, event.clientX, event.clientY, this.player.playerSize.w, this.player.playerSize.h, speed, this.player.playerPos.x, this.player.playerPos.y))
         })
     },
 
@@ -115,7 +117,7 @@ const irongame = {
     },
 
     createOctoEnemy() {
-        const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX('octo'), this.getRandomY('octo'), 80, 80, this.gameLimits, this.playerPos)
+        const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX('octo'), this.getRandomY('octo'), 40, 40, this.gameLimits, this.playerPos)
         this.octoEnemies.push(newEnemy)
     },
     
@@ -144,7 +146,7 @@ const irongame = {
         else if (enemy === 'octo' && this.octoEnemies.length > 0) size = this.octoEnemies[0].octoEnemySize.h
         if (size) {
             const random = Math.floor(Math.random() * (this.gameLimits.b - size - this.gameLimits.t) + this.gameLimits.t)
-            console.log('Y',random)
+            // console.log('Y',random)
             return random
         }
     },
@@ -155,10 +157,76 @@ const irongame = {
         else if (enemy === 'octo' && this.octoEnemies.length > 0) size = this.octoEnemies[0].octoEnemySize.w 
         if (size) {
         const random = Math.floor(Math.random() * (this.gameLimits.r - size - this.gameLimits.l) + this.gameLimits.l)
-        console.log('X',random)
+        // console.log('X',random)
         return random
         }
-    }
+    },
 
+    getRandomW(enemy) {
+        if (enemy === 'octo') {
+            const random = Math.floor(Math.random() * (this.gameLimits.r - size - this.gameLimits.l) + this.gameLimits.l)
+            console.log('X',random)
+            return random
+        }
+        // let size = 80
+        // if (enemy === 'python' && this.pythonEnemies.length > 0) size = this.pythonEnemies[0].pythonEnemySize.w 
+        // else if (enemy === 'octo' && this.octoEnemies.length > 0) size = this.octoEnemies[0].octoEnemySize.w 
+        // if (size) {
+        // const random = Math.floor(Math.random() * (this.gameLimits.r - size - this.gameLimits.l) + this.gameLimits.l)
+        // // console.log('X',random)
+        // return random
+        // }
+    },
+
+    checkPlayerPythonCollision() {
+        this.pythonEnemies.forEach(pythonEnemy => {        
+        if (this.player.playerPos.x  < pythonEnemy.pythonEnemyPos.x + pythonEnemy.pythonEnemySize.w &&
+            this.player.playerPos.x  + this.player.playerSize.w > pythonEnemy.pythonEnemyPos.x &&
+            this.player.playerPos.y < pythonEnemy.pythonEnemyPos.y + pythonEnemy.pythonEnemySize.h &&
+            this.player.playerSize.h + this.player.playerPos.y > pythonEnemy.pythonEnemyPos.y) {
+                // console.log('¡colision detectada!')
+            }
+        })      
+    },
+
+    checkPlayerOctoCollision() {
+        this.octoEnemies.forEach(octoEnemy => {        
+        if (this.player.playerPos.x  < octoEnemy.octoEnemyPos.x + octoEnemy.octoEnemySize.w &&
+            this.player.playerPos.x  + this.player.playerSize.w > octoEnemy.octoEnemyPos.x &&
+            this.player.playerPos.y < octoEnemy.octoEnemyPos.y + octoEnemy.octoEnemySize.h &&
+            this.player.playerSize.h + this.player.playerPos.y > octoEnemy.octoEnemyPos.y) {
+                // console.log('¡OLEEEEEE!')
+            }
+        })
+    },
+    
+    checkBulletEnemyCollision() {
+        this.bullets.forEach((bullet, i, bullets) => {
+          this.octoEnemies.forEach((octoEnemy, j, octoEnemies) => {
+            if (bullet.bulletPos.x < octoEnemy.octoEnemyPos.x + octoEnemy.octoEnemySize.w &&
+              bullet.bulletPos.x + bullet.bulletSize.w > octoEnemy.octoEnemyPos.x &&
+              bullet.bulletPos.y < octoEnemy.octoEnemyPos.y + octoEnemy.octoEnemySize.h &&
+              bullet.bulletSize.h + bullet.bulletPos.y > octoEnemy.octoEnemyPos.y) {
+              bullets.splice(i, 1)
+              octoEnemies.splice(j, 1)
+            //   console.log("Ay!!!")
+            }
+          })
+        })
+    
+        this.bullets.forEach((bullet, i, bullets) => {
+        this.pythonEnemies.forEach((pythonEnemy, j, pythonEnemies) => {
+            if (bullet.bulletPos.x < pythonEnemy.pythonEnemyPos.x + pythonEnemy.pythonEnemySize.w &&
+              bullet.bulletPos.x + bullet.bulletSize.w > pythonEnemy.pythonEnemyPos.x &&
+              bullet.bulletPos.y < pythonEnemy.pythonEnemyPos.y + pythonEnemy.pythonEnemySize.h &&
+              bullet.bulletSize.h + bullet.bulletPos.y > pythonEnemy.pythonEnemyPos.y) {
+              bullets.splice(i, 1);
+              pythonEnemies.splice(j, 1);
+            //   console.log("Muerto!!!");
+            }
+          })
+        })
+    },
+  
 }
 
