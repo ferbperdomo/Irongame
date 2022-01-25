@@ -14,6 +14,7 @@ const irongame = {
     FPS: 60,
     framesIndex: 0,
     gameLimits: {l: 90, r: 770, t: 50, b: 400},
+    randomSize: 1,
     
 
     init() {
@@ -36,8 +37,9 @@ const irongame = {
     drawAll() {
         setInterval(() => {
             this.framesIndex++
-            this.framesIndex % 60 === 0 ? this.createPythonEnemy() : null
-            this.framesIndex % 20 === 0 ? this.createOctoEnemy() : null
+            this.getRandomW()
+            this.framesIndex % 80 === 0 ? this.createPythonEnemy() : null
+            this.framesIndex % 40 === 0 ? this.createOctoEnemy() : null
             this.clearAll()
             this.drawBackgroud()
             this.drawPlayer()
@@ -117,8 +119,9 @@ const irongame = {
     },
 
     createOctoEnemy() {
-        const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX('octo'), this.getRandomY('octo'), 40, 40, this.gameLimits, this.playerPos)
+        const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX('octo'), this.getRandomY('octo'), this.randomSize, this.randomSize, this.gameLimits, this.playerPos)
         this.octoEnemies.push(newEnemy)
+        console.log('PULPITOSSS',this.octoEnemies)
     },
     
     drawOctoEnemy() {
@@ -140,42 +143,19 @@ const irongame = {
         this.bonus.draw()
     },
     
-    getRandomY(enemy) {
-        let size = 80
-        if (enemy === 'python' && this.pythonEnemies.length > 0) size = this.pythonEnemies[0].pythonEnemySize.h
-        else if (enemy === 'octo' && this.octoEnemies.length > 0) size = this.octoEnemies[0].octoEnemySize.h
-        if (size) {
-            const random = Math.floor(Math.random() * (this.gameLimits.b - size - this.gameLimits.t) + this.gameLimits.t)
-            // console.log('Y',random)
-            return random
-        }
-    },
-
-    getRandomX(enemy) {
-        let size = 80
-        if (enemy === 'python' && this.pythonEnemies.length > 0) size = this.pythonEnemies[0].pythonEnemySize.w 
-        else if (enemy === 'octo' && this.octoEnemies.length > 0) size = this.octoEnemies[0].octoEnemySize.w 
-        if (size) {
-        const random = Math.floor(Math.random() * (this.gameLimits.r - size - this.gameLimits.l) + this.gameLimits.l)
-        // console.log('X',random)
+    getRandomY() {
+        const random = Math.floor(Math.random() * (this.gameLimits.b - 80 - this.gameLimits.t) + this.gameLimits.t)
         return random
-        }
     },
 
-    getRandomW(enemy) {
-        if (enemy === 'octo') {
-            const random = Math.floor(Math.random() * (this.gameLimits.r - size - this.gameLimits.l) + this.gameLimits.l)
-            console.log('X',random)
-            return random
-        }
-        // let size = 80
-        // if (enemy === 'python' && this.pythonEnemies.length > 0) size = this.pythonEnemies[0].pythonEnemySize.w 
-        // else if (enemy === 'octo' && this.octoEnemies.length > 0) size = this.octoEnemies[0].octoEnemySize.w 
-        // if (size) {
-        // const random = Math.floor(Math.random() * (this.gameLimits.r - size - this.gameLimits.l) + this.gameLimits.l)
-        // // console.log('X',random)
-        // return random
-        // }
+    getRandomX() {
+        const random = Math.floor(Math.random() * (this.gameLimits.r - 80 - this.gameLimits.l) + this.gameLimits.l)
+        return random
+    },
+
+    getRandomW() {
+        const random = Math.floor(Math.random() * (50 - 15) + 15)
+        this.randomSize = random
     },
 
     checkPlayerPythonCollision() {

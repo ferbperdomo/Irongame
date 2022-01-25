@@ -22,20 +22,9 @@ class PythonEnemy {
 
     move(playerPos) {
         this.pythonEnemyPos.x += (playerPos.x - this.pythonEnemyPos.x)*0.01
-        this.pythonEnemyPos.y += (playerPos.y - this.pythonEnemyPos.y)*0.01
-        this.checkCollision()
-        
+        this.pythonEnemyPos.y += (playerPos.y - this.pythonEnemyPos.y)*0.01        
     }
-    checkCollision() {
-        if (this.pythonEnemyPos.x + this.pythonEnemySize.w >= this.gameLimits.r || this.pythonEnemyPos.x <= this.gameLimits.l ) {
-            this.turn()
-        }
-    }
-        
-    turn() {
-        this.speed *= -1
-    }
-
+   
 }
 
 

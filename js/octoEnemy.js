@@ -17,22 +17,13 @@ class OctoEnemy {
 
     draw() {
         this.ctx.drawImage(this.imageInstance, this.octoEnemyPos.x, this.octoEnemyPos.y, this.octoEnemySize.w, this.octoEnemySize.h)
+        console.log('tamañoooo:', this.octoEnemyPos.x, this.octoEnemyPos.y)
     }
 
     move(playerPos) {
         this.octoEnemyPos.x += (playerPos.x - this.octoEnemyPos.x)*0.01
-        this.octoEnemyPos.y += (playerPos.y - this.octoEnemyPos.y)*0.01
-        this.checkCollision()
-        
+        this.octoEnemyPos.y += (playerPos.y - this.octoEnemyPos.y)*0.01        
     }
-    checkCollision() {
-        if (this.octoEnemyPos.y >= this.gameLimits.b - this.octoEnemySize.h || this.octoEnemyPos.y <= this.gameLimits.t) {
-            this.turn()
-        }
-    }
-        
-    turn(){
-        this.speed *= -1
-    }
+    
 
 }
