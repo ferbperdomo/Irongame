@@ -14,7 +14,7 @@ const irongame = {
     FPS: 60,
     framesIndex: 0,
     gameLimits: {l: 90, r: 770, t: 50, b: 400},
-    // game
+    
 
     init() {
         this.setContext()
@@ -47,6 +47,14 @@ const irongame = {
             this.bullets.forEach((bullet) => {
                 bullet.drawBullets()
             })
+            this.pythonEnemies.forEach(enemy => {
+                enemy.move(this.player.playerPos)
+                enemy.draw()
+            })
+            this.octoEnemies.forEach(enemy => {
+                enemy.move(this.player.playerPos)
+                enemy.draw()
+            })
         }, 20)
         
     },
@@ -69,6 +77,7 @@ const irongame = {
 
     clearAll() {
         this.ctx.clearRect(0, 0, this.gameSize.w, this.gameSize.h)
+        this.clearBullets()
     },
 
     setEventHandlers() {
@@ -95,9 +104,7 @@ const irongame = {
     },
 
     createPythonEnemy() {
-        console.log(this.createPythonEnemy)
-        // this.pythonEnemy = new PythonEnemy (this.ctx, getRandomX, getRandomY, 80, 80, this.gameLimits)
-        const newEnemy = new PythonEnemy (this.ctx, this.getRandomX('python'), this.getRandomY('python'), 80, 80, this.gameLimits)
+        const newEnemy = new PythonEnemy (this.ctx, this.getRandomX('python'), this.getRandomY('python'), 80, 80, this.gameLimits, this.playerPos)
         this.pythonEnemies.push(newEnemy)
     },
 
@@ -108,7 +115,7 @@ const irongame = {
     },
 
     createOctoEnemy() {
-        const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX('octo'), this.getRandomY('octo'), 80, 80, this.gameLimits)
+        const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX('octo'), this.getRandomY('octo'), 80, 80, this.gameLimits, this.playerPos)
         this.octoEnemies.push(newEnemy)
     },
     
@@ -116,6 +123,11 @@ const irongame = {
         this.octoEnemies.forEach(octoEnemy => {
             octoEnemy.draw()
         })  
+    },
+
+    clearBullets() {
+        this.bullets = this.bullets.filter((bullet) => this.gameSize.w > bullet.bulletPos.x && bullet.bulletPos.x > 0 &&
+            this.gameSize.h > bullet.bulletPos.y && bullet.bulletPos.y > 0)
     },
 
     createBonus() {

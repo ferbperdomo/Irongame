@@ -17,11 +17,11 @@ class OctoEnemy {
 
     draw() {
         this.ctx.drawImage(this.imageInstance, this.octoEnemyPos.x, this.octoEnemyPos.y, this.octoEnemySize.w, this.octoEnemySize.h)
-        this.move()
     }
 
-    move() {
-        this.octoEnemyPos.y += this.speed
+    move(playerPos) {
+        this.octoEnemyPos.x += (playerPos.x - this.octoEnemyPos.x)*0.01
+        this.octoEnemyPos.y += (playerPos.y - this.octoEnemyPos.y)*0.01
         this.checkCollision()
         
     }
