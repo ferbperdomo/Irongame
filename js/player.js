@@ -6,6 +6,7 @@ class Player {
         this.playerSize = {w: playerWidth, h: playerHeight}
         this.gameLimits =  {l: 90, r: 770, t: 50, b: 375},
         this.imageInstance = undefined
+        this.health = 500
 
         
         this.init()
@@ -17,6 +18,7 @@ class Player {
     }
 
     draw() {
+        this.healthCounter()
         this.ctx.drawImage(this.imageInstance, this.playerPos.x, this.playerPos.y, this.playerSize.w, this.playerSize.h)
     }
 
@@ -24,11 +26,11 @@ class Player {
     // Las condiciones se modificarán cuando tengamos el background final
     
     moveLeft() {
-        if (this.playerPos.x > this.gameLimits.l) {
-          this.playerPos.x -= 15
-        } else {
-          this.playerPos.x = this.gameLimits.l
-        }
+      if (this.playerPos.x > this.gameLimits.l) {
+        this.playerPos.x -= 15
+      } else {
+        this.playerPos.x = this.gameLimits.l
+      }
     }
 
     moveRight() {
@@ -53,5 +55,10 @@ class Player {
         } else {
           this.playerPos.y = this.gameLimits.b
         }
+    }
+    
+    healthCounter() {
+      this.ctx.fillStyle = 'red'
+      this.ctx.fillRect(50, 425, this.health === 100 ? 0 : this.health, 35)
     }
 }

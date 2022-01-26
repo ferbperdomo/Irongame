@@ -1,6 +1,6 @@
 const irongame = {
     appName: 'Irongame',
-    author: 'Cristian Perdomo y Ricardo Molpeceres' ,
+    author: 'Cristian Perdomo and Ricardo Molpeceres' ,
     version: '1.0.0',
     license: undefined,
     gameSize: { w: 900, h: 500 },
@@ -15,7 +15,7 @@ const irongame = {
     framesIndex: 0,
     gameLimits: {l: 90, r: 770, t: 50, b: 400},
     randomSize: 1,
-    
+    intervalID: undefined,
 
     init() {
         this.setContext()
@@ -26,42 +26,37 @@ const irongame = {
         this.createOctoEnemy() 
         this.drawAll()
         this.setEventHandlers()
+        this.clearAll()
     },
 
     setContext() {
         this.ctx = document.querySelector('#myCanvas').getContext('2d')
         console.log(this.ctx)
-
     },
 
     drawAll() {
-        setInterval(() => {
-            this.framesIndex++
-            this.getRandomW()
-            this.framesIndex % 80 === 0 ? this.createPythonEnemy() : null
-            this.framesIndex % 40 === 0 ? this.createOctoEnemy() : null
-            this.clearAll()
-            this.drawBackgroud()
-            this.drawPlayer()
-            this.drawBonus()
-            this.drawPythonEnemy()
-            this.drawOctoEnemy()
-            this.checkPlayerPythonCollision()
-            this.checkPlayerOctoCollision()
-            this.checkBulletEnemyCollision()
-            this.bullets.forEach((bullet) => {
-                bullet.drawBullets()
-            })
-            this.pythonEnemies.forEach(enemy => {
-                enemy.move(this.player.playerPos)
-                enemy.draw()
-            })
-            this.octoEnemies.forEach(enemy => {
-                enemy.move(this.player.playerPos)
-                enemy.draw()
-            })
-        }, 20)
-        
+        this.intervalID = setInterval(() => {
+        this.framesIndex++
+        this.getRandomW()
+        this.framesIndex % 80 === 0 ? this.createPythonEnemy() : null
+        this.framesIndex % 40 === 0 ? this.createOctoEnemy() : null
+        this.framesIndex % 300 === 0 ? this.createBonus() : null
+        this.clearAll()
+        this.drawBackgroud()
+        this.drawPlayer()
+        this.drawBonus()
+        this.drawPythonEnemy()
+        this.drawOctoEnemy()
+        this.checkPlayerPythonCollision()
+        this.checkPlayerOctoCollision()
+        this.checkBulletEnemyCollision()
+        this.checkPlayerBonusCollision()
+        this.bullets.forEach((bullet) => { bullet.drawBullets()})
+        this.pythonEnemies.forEach(enemy => { enemy.move(this.player.playerPos)
+            enemy.draw()})
+        this.octoEnemies.forEach(enemy => { enemy.move(this.player.playerPos)
+                enemy.draw()})
+        this.checkLife()}, 20)
     },
 
     createBackground() {
@@ -83,7 +78,6 @@ const irongame = {
     clearAll() {
         this.ctx.clearRect(0, 0, this.gameSize.w, this.gameSize.h)
         this.clearBullets()
-        // console.log("BALASSSSSSS:", this.bullets);
     },
 
     setEventHandlers() {
@@ -108,7 +102,7 @@ const irongame = {
     },
 
     createPythonEnemy() {
-        const newEnemy = new PythonEnemy (this.ctx, this.getRandomX('python'), this.getRandomY('python'), 80, 80, this.gameLimits, this.playerPos)
+        const newEnemy = new PythonEnemy (this.ctx, this.getRandomX(), this.getRandomY(), 80, 80, this.gameLimits, this.playerPos)
         this.pythonEnemies.push(newEnemy)
     },
 
@@ -119,7 +113,7 @@ const irongame = {
     },
 
     createOctoEnemy() {
-        const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX('octo'), this.getRandomY('octo'), this.randomSize, this.randomSize, this.gameLimits, this.playerPos)
+        const newEnemy =  new OctoEnemy (this.ctx, this.getRandomX(), this.getRandomY(), this.randomSize, this.randomSize, this.gameLimits, this.playerPos)
         this.octoEnemies.push(newEnemy)
     },
     
@@ -135,11 +129,14 @@ const irongame = {
     },
 
     createBonus() {
-        this.bonus = new Bonus (this.ctx, 750, 370, 20, 20)
+        const newBonus = new Bonus (this.ctx, this.getRandomX(), this.getRandomY(), 20, 20)
+        this.bonus.push(newBonus)
     },
 
     drawBonus() {
-        this.bonus.draw()
+        this.bonus.forEach(bonus => {
+            bonus.draw()
+        })
     },
     
     getRandomY() {
@@ -158,24 +155,38 @@ const irongame = {
     },
 
     checkPlayerPythonCollision() {
-        this.pythonEnemies.forEach(pythonEnemy => {        
+        this.pythonEnemies.forEach((pythonEnemy, i) => {        
         if (this.player.playerPos.x  < pythonEnemy.pythonEnemyPos.x + pythonEnemy.pythonEnemySize.w &&
             this.player.playerPos.x  + this.player.playerSize.w > pythonEnemy.pythonEnemyPos.x &&
             this.player.playerPos.y < pythonEnemy.pythonEnemyPos.y + pythonEnemy.pythonEnemySize.h &&
             this.player.playerSize.h + this.player.playerPos.y > pythonEnemy.pythonEnemyPos.y) {
-                // console.log('¡colision detectada!')
+            this.pythonEnemies.splice(i, 1)
+            this.player.health -= 100
             }
         })      
     },
 
     checkPlayerOctoCollision() {
-        this.octoEnemies.forEach(octoEnemy => {        
+        this.octoEnemies.forEach((octoEnemy, i) => {        
         if (this.player.playerPos.x  < octoEnemy.octoEnemyPos.x + octoEnemy.octoEnemySize.w &&
             this.player.playerPos.x  + this.player.playerSize.w > octoEnemy.octoEnemyPos.x &&
             this.player.playerPos.y < octoEnemy.octoEnemyPos.y + octoEnemy.octoEnemySize.h &&
             this.player.playerSize.h + this.player.playerPos.y > octoEnemy.octoEnemyPos.y) {
-                // console.log('¡OLEEEEEE!')
+            this.octoEnemies.splice(i, 1)
+            this.player.health -= 100
             }
+        })
+    },
+
+    checkPlayerBonusCollision() {
+        this.bonus.forEach((bonus, i) => {        
+        if (this.player.playerPos.x  < bonus.bonusPos.x + bonus.bonusSize.w &&
+            this.player.playerPos.x  + this.player.playerSize.w > bonus.bonusPos.x &&
+            this.player.playerPos.y < bonus.bonusPos.y + bonus.bonusSize.h &&
+            this.player.playerSize.h + this.player.playerPos.y > bonus.bonusPos.y) {
+            this.bonus.splice(i, 1)
+            this.player.health += 100 
+            } 
         })
     },
     
@@ -188,7 +199,6 @@ const irongame = {
               bullet.bulletSize.h + bullet.bulletPos.y > octoEnemy.octoEnemyPos.y) {
               bullets.splice(i, 1)
               octoEnemies.splice(j, 1)
-            //   console.log("Ay!!!")
             }
           })
         })
@@ -201,11 +211,18 @@ const irongame = {
               bullet.bulletSize.h + bullet.bulletPos.y > pythonEnemy.pythonEnemyPos.y) {
               bullets.splice(i, 1);
               pythonEnemies.splice(j, 1);
-            //   console.log("Muerto!!!");
             }
           })
         })
     },
   
+    checkLife() {
+        console.log(this.player.health)
+        if (this.player.health <= 0) {
+            clearInterval(this.intervalID)
+            alert('You died') 
+            window.location.reload(false)
+        }
+    }
 }
 
