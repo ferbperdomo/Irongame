@@ -10,7 +10,8 @@ const irongame = {
     pythonEnemies: [],
     bonus: [],
     bullets: [],
-    coundown: 90, 
+    seconds: 45, 
+    countdown: undefined,
     FPS: 60,
     framesIndex: 0,
     gameLimits: {l: 90, r: 770, t: 50, b: 400},
@@ -20,10 +21,12 @@ const irongame = {
     init() {
         this.setContext()
         this.createBackground()
+        this.createCountdown()
         this.createPlayer()
         this.createBonus()
         this.createPythonEnemy()
         this.createOctoEnemy() 
+        this.createLifeBar() 
         this.drawAll()
         this.setEventHandlers()
         this.clearAll()
@@ -41,22 +44,27 @@ const irongame = {
         this.framesIndex % 80 === 0 ? this.createPythonEnemy() : null
         this.framesIndex % 40 === 0 ? this.createOctoEnemy() : null
         this.framesIndex % 300 === 0 ? this.createBonus() : null
+        this.framesIndex % 50 === 0 && this.seconds--
         this.clearAll()
         this.drawBackgroud()
+        this.drawCountdown()
         this.drawPlayer()
         this.drawBonus()
         this.drawPythonEnemy()
         this.drawOctoEnemy()
+        this.drawLifeBar()
         this.checkPlayerPythonCollision()
         this.checkPlayerOctoCollision()
         this.checkBulletEnemyCollision()
         this.checkPlayerBonusCollision()
-        this.bullets.forEach((bullet) => { bullet.drawBullets()})
+        this.bullets.forEach((bullet) => { bullet.draw()})
         this.pythonEnemies.forEach(enemy => { enemy.move(this.player.playerPos)
             enemy.draw()})
         this.octoEnemies.forEach(enemy => { enemy.move(this.player.playerPos)
                 enemy.draw()})
-        this.checkLife()}, 20)
+        this.checkLife()
+        this.checkLife() ? this.gameOver() : null
+    }, 20)
     },
 
     createBackground() {
@@ -89,6 +97,7 @@ const irongame = {
             key === 'ArrowDown' ? this.player.moveDown() : null
         })
         document.addEventListener("click", (event) => {
+
             const angle = Math.atan2(
               event.clientY - this.gameSize.h / 2,
               event.clientX - this.gameSize.w / 2
@@ -138,10 +147,30 @@ const irongame = {
             bonus.draw()
         })
     },
+
+    createCountdown() {
+        this.countdown = new Countdown(this.ctx)
+    },
+
+    drawCountdown() {
+        this.countdown.draw(this.seconds)
+        if(this.seconds === 0) {
+            alert('YOU WON!')
+        }
+    },
+
+    createLifeBar() {
+        this.lifeBar = new Lifebar(this.ctx);
+    },
+
+    drawLifeBar() {
+        this.lifeBar.draw(this.player.playerHealth);
+    },
     
     getRandomY() {
         const random = Math.floor(Math.random() * (this.gameLimits.b - 80 - this.gameLimits.t) + this.gameLimits.t)
         return random
+       
     },
 
     getRandomX() {
@@ -161,7 +190,7 @@ const irongame = {
             this.player.playerPos.y < pythonEnemy.pythonEnemyPos.y + pythonEnemy.pythonEnemySize.h &&
             this.player.playerSize.h + this.player.playerPos.y > pythonEnemy.pythonEnemyPos.y) {
             this.pythonEnemies.splice(i, 1)
-            this.player.health -= 100
+            this.player.playerHealth -= 100
             }
         })      
     },
@@ -173,7 +202,7 @@ const irongame = {
             this.player.playerPos.y < octoEnemy.octoEnemyPos.y + octoEnemy.octoEnemySize.h &&
             this.player.playerSize.h + this.player.playerPos.y > octoEnemy.octoEnemyPos.y) {
             this.octoEnemies.splice(i, 1)
-            this.player.health -= 100
+            this.player.playerHealth -= 100
             }
         })
     },
@@ -185,7 +214,7 @@ const irongame = {
             this.player.playerPos.y < bonus.bonusPos.y + bonus.bonusSize.h &&
             this.player.playerSize.h + this.player.playerPos.y > bonus.bonusPos.y) {
             this.bonus.splice(i, 1)
-            this.player.health += 100 
+            this.player.playerHealth += 100 
             } 
         })
     },
@@ -217,12 +246,18 @@ const irongame = {
     },
   
     checkLife() {
-        console.log(this.player.health)
-        if (this.player.health <= 0) {
+        // console.log(this.player.playerHealth)
+        if (this.player.playerHealth === 0) {
             clearInterval(this.intervalID)
-            alert('You died') 
-            window.location.reload(false)
+            // alert('You died') 
+            // window.location.reload(false)
         }
-    }
+
+    },
+
+    gameOver() {
+        clearInterval(this.interval)
+    },
+
 }
 

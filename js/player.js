@@ -6,7 +6,7 @@ class Player {
         this.playerSize = {w: playerWidth, h: playerHeight}
         this.gameLimits =  {l: 90, r: 770, t: 50, b: 375},
         this.imageInstance = undefined
-        this.health = 500
+        this.playerHealth = 500
 
         
         this.init()
@@ -59,6 +59,6 @@ class Player {
     
     healthCounter() {
       this.ctx.fillStyle = 'red'
-      this.ctx.fillRect(50, 425, this.health === 100 ? 0 : this.health, 35)
+      this.ctx.fillRect(50, 425, this.health === 0, this.health, 35)
     }
 }

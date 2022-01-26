@@ -1,5 +1,5 @@
 class PythonEnemy {
-    constructor(ctx, pythonEnemyX, pythonEnemyY, pythonEnemyWidth, pythonEnemyHeight, gameLimits, playerPos, speed = 5 ) {
+    constructor(ctx, pythonEnemyX, pythonEnemyY, pythonEnemyWidth, pythonEnemyHeight, gameLimits, playerPos, speed = 3 ) {
         this.ctx = ctx
         this.pythonEnemyPos = {x: pythonEnemyX, y: pythonEnemyY}
         this.pythonEnemySize = {w: pythonEnemyWidth, h: pythonEnemyHeight}
@@ -20,10 +20,18 @@ class PythonEnemy {
         this.ctx.drawImage(this.imageInstance, this.pythonEnemyPos.x, this.pythonEnemyPos.y, this.pythonEnemySize.w, this.pythonEnemySize.h)
     }
 
-    move(playerPos) {
-        this.pythonEnemyPos.x += (playerPos.x - this.pythonEnemyPos.x)*0.01
-        this.pythonEnemyPos.y += (playerPos.y - this.pythonEnemyPos.y)*0.01        
-    }
+    normalize(x, y) {
+        return Math.sqrt(x * x + y * y)
+      }
+    
+      move(playerPos) {
+        let normal = this.normalize(playerPos.x - this.pythonEnemyPos.x, playerPos.y - this.pythonEnemyPos.y)
+    
+        playerPos.x != this.pythonEnemyPos.x &&
+        (this.pythonEnemyPos.x += ((playerPos.x - this.pythonEnemyPos.x) / normal) * this.speed)
+        playerPos.y != this.pythonEnemyPos.y &&
+        (this.pythonEnemyPos.y += ((playerPos.y - this.pythonEnemyPos.y) / normal) * this.speed)
+      }
    
 }
 
