@@ -1,10 +1,10 @@
 class OctoEnemy {
-    constructor(ctx, octoEnemyX, octoEnemyY, octoEnemyWidth, octoEnemyHeight, gameLimits, speed = 2) {
+    constructor(ctx, octoEnemyX, octoEnemyY, octoEnemyWidth, octoEnemyHeight, gameLimits) {
         this.ctx = ctx
         this.octoEnemyPos = {x: octoEnemyX, y: octoEnemyY}
         this.octoEnemySize = {w: octoEnemyWidth, h: octoEnemyHeight}
         this.gameLimits =  gameLimits
-        this.speed = speed
+        this.speed = 3
         this.imageInstance = undefined
         
         this.init()
@@ -13,10 +13,21 @@ class OctoEnemy {
     init() {
         this.imageInstance = new Image()
         this.imageInstance.src = 'img/octoEnemy.png'
+        this.imageInstance.frames = 7
+        this.imageInstance.framesIndex = 0
     }
 
-    draw() {
-        this.ctx.drawImage(this.imageInstance, this.octoEnemyPos.x, this.octoEnemyPos.y, this.octoEnemySize.w, this.octoEnemySize.h)
+    draw(framesIndex) {
+        this.ctx.drawImage(this.imageInstance, this.imageInstance.framesIndex * (this.imageInstance.width / this.imageInstance.frames), 0,
+        this.imageInstance.width / this.imageInstance.frames, this.imageInstance.height,
+        this.octoEnemyPos.x, this.octoEnemyPos.y, this.octoEnemySize.w, this.octoEnemySize.h)
+        this.animate(framesIndex)
+    }
+    
+    animate(framesIndex) {
+        if (framesIndex % 5 == 0) {this.imageInstance.framesIndex++}
+        if (this.imageInstance.framesIndex >= this.imageInstance.frames) {
+        this.imageInstance.framesIndex = 0}
     }
 
     normalize(x, y) {

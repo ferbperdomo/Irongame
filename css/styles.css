@@ -7,15 +7,6 @@
     
 }
 
-#alter-background {
-    margin: 0;
-    width: 900px;
-    height: 500px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
 #game-board{
     margin: 0;
     width: 900px;
@@ -53,3 +44,11 @@ p {
     margin-bottom: 30px;
 }
 
+#myCanvas {
+    cursor: url("../img/mousse.png"), auto;
+}
+
+#lastwill {
+    display: none;
+    width: 400px;
+}

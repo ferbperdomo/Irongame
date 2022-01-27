@@ -14,13 +14,7 @@ class Background {
     }
 
     draw() {
-      this.ctx.drawImage(
-        this.imageInstance,
-        this.backgroundPos.x,
-        this.backgroundPos.y,
-        this.backgroundSize.w,
-        this.backgroundSize.h
-      )
+      this.ctx.drawImage(this.imageInstance, this.backgroundPos.x, this.backgroundPos.y, this.backgroundSize.w, this.backgroundSize.h)
     }
 
 }

@@ -34,26 +34,29 @@ const irongame = {
         this.drawAll()
         this.setEventHandlers()
         this.clearAll()
-        this.backgroundAudio = new Audio ('./audios/backgroundAudio.wav')
+        this.imageLastWill = new Image()
+        this.imageLastWill.src = "img/last-will.jpeg"
     },
 
     //Context 
 
     setContext() {
         this.ctx = document.querySelector('#myCanvas').getContext('2d')
-        this.ctx.fillStyle = "#FF0000"
-
         console.log(this.ctx)
     },
 
     //Call and draw
 
+    
     drawAll() {
+        backgroundAudio.backgroundAudio.play();
+        backgroundAudio.backgroundAudio.volume = 0.4;
+        backgroundAudio.backgroundAudio.loop = true;
         this.intervalID = setInterval(() => {
         this.framesIndex++
         this.getRandomW()
-        this.framesIndex % 80 === 0 ? this.createPythonEnemy() : null
-        this.framesIndex % 40 === 0 ? this.createOctoEnemy() : null
+        this.framesIndex % 180 === 0 ? this.createPythonEnemy() : null
+        this.framesIndex % 140 === 0 ? this.createOctoEnemy() : null
         this.framesIndex % 800 === 0 ? this.createBonus() : null
         this.framesIndex % 50 === 0 && this.seconds--
         this.clearAll()
@@ -112,11 +115,11 @@ const irongame = {
     },
 
     createPlayer() {
-        this.player = new Player (this.ctx, 450, 250, 50, 50)
+        this.player = new Player (this.ctx, 450, 250, 70, 70)
     },
 
     drawPlayer() {
-        this.player.draw()
+        this.player.draw(this.framesIndex)
     },
 
     createPythonEnemy() {
@@ -136,7 +139,7 @@ const irongame = {
     
     drawOctoEnemy() {
         this.octoEnemies.forEach((octoEnemy) => {octoEnemy.move(this.player.playerPos)
-            octoEnemy.draw()})
+            octoEnemy.draw(this.framesIndex)})
     },
 
     clearBullets() {
@@ -151,7 +154,7 @@ const irongame = {
 
     drawBonus() {
         this.bonus.forEach(bonus => {
-            bonus.draw()
+            bonus.draw(this.framesIndex)
         })
     },
 
@@ -162,7 +165,7 @@ const irongame = {
     drawCountdown() {
         this.countdown.draw(this.seconds)
         if(this.seconds === 0) {
-            // alert('YOU WON!')
+            
         }
     },
 
@@ -173,6 +176,7 @@ const irongame = {
     drawLifeBar() {
         this.lifeBar.draw(this.player.playerHealth);
     },
+    
 
     //Get random input
     
@@ -193,7 +197,7 @@ const irongame = {
     },
 
     getRandomW() {
-        const random = Math.floor(Math.random() * (50 - 15) + 15)
+        const random = Math.floor(Math.random() * (80 - 45) + 45)
         this.randomSize = random
     },
 
@@ -266,15 +270,18 @@ const irongame = {
     checkLife() {
         // console.log(this.player.playerHealth)
         if (this.player.playerHealth === 0) {
-            clearInterval(this.intervalID)
-            // alert('You died') 
-            window.location.reload(false)
+            return true
         }
 
     },
 
     gameOver() {
-        clearInterval(this.interval)
+        backgroundAudio.backgroundAudio.volume = false
+        this.ctx.fillStyle = 'black'
+        this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
+        this.ctx.drawImage(this.imageLastWill, this.gameSize.w/2-this.imageLastWill.width/2, this.gameSize.h/2-this.imageLastWill.height/2)
+        clearInterval(this.intervalID)
+        
     },
 
 

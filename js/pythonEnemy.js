@@ -1,11 +1,11 @@
 class PythonEnemy {
-    constructor(ctx, pythonEnemyX, pythonEnemyY, pythonEnemyWidth, pythonEnemyHeight, gameLimits, playerPos, speed = 0.5 ) {
+    constructor(ctx, pythonEnemyX, pythonEnemyY, pythonEnemyWidth, pythonEnemyHeight, gameLimits, playerPos) {
         this.ctx = ctx
         this.pythonEnemyPos = {x: pythonEnemyX, y: pythonEnemyY}
         this.pythonEnemySize = {w: pythonEnemyWidth, h: pythonEnemyHeight}
         this.gameLimits =  gameLimits
         this.playerPos = playerPos
-        this.speed = speed
+        this.speed = 2
         this.imageInstance = undefined
         this.frames = undefined
         
@@ -16,8 +16,8 @@ class PythonEnemy {
         this.imageInstance = new Image()
         this.imageInstance.src = 'img/pythonEnemy.png'
         //imagen sprite
-        this.imageInstance.frames = 5;
-        this.imageInstance.framesIndex = 0;
+        this.imageInstance.frames = 5
+        this.imageInstance.framesIndex = 0
     }
 
     draw(framesIndex) {

@@ -15,15 +15,23 @@ class Player {
     init() {
         this.imageInstance = new Image()
         this.imageInstance.src = 'img/player.png'
+        this.imageInstance.frames = 4
+        this.imageInstance.framesIndex = 0
     }
 
-    draw() {
-        this.healthCounter()
-        this.ctx.drawImage(this.imageInstance, this.playerPos.x, this.playerPos.y, this.playerSize.w, this.playerSize.h)
+    draw(framesIndex) {
+      this.ctx.drawImage(this.imageInstance, this.imageInstance.framesIndex * (this.imageInstance.width / this.imageInstance.frames), 0,
+      this.imageInstance.width / this.imageInstance.frames, this.imageInstance.height,
+      this.playerPos.x, this.playerPos.y, this.playerSize.w, this.playerSize.h)
+      this.animate(framesIndex)
+      this.healthCounter()
     }
-
-
-    // Las condiciones se modificarán cuando tengamos el background final
+  
+    animate(framesIndex) {
+      if (framesIndex % 5 == 0) {this.imageInstance.framesIndex++}
+      if (this.imageInstance.framesIndex >= this.imageInstance.frames) {
+      this.imageInstance.framesIndex = 0}
+    }
     
     moveLeft() {
       if (this.playerPos.x > this.gameLimits.l) {
