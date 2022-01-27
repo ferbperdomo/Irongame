@@ -1,5 +1,5 @@
 class PythonEnemy {
-    constructor(ctx, pythonEnemyX, pythonEnemyY, pythonEnemyWidth, pythonEnemyHeight, gameLimits, playerPos, speed = 3 ) {
+    constructor(ctx, pythonEnemyX, pythonEnemyY, pythonEnemyWidth, pythonEnemyHeight, gameLimits, playerPos, speed = 0.5 ) {
         this.ctx = ctx
         this.pythonEnemyPos = {x: pythonEnemyX, y: pythonEnemyY}
         this.pythonEnemySize = {w: pythonEnemyWidth, h: pythonEnemyHeight}
@@ -7,6 +7,7 @@ class PythonEnemy {
         this.playerPos = playerPos
         this.speed = speed
         this.imageInstance = undefined
+        this.frames = undefined
         
         this.init()
     }
@@ -14,10 +15,22 @@ class PythonEnemy {
     init() {
         this.imageInstance = new Image()
         this.imageInstance.src = 'img/pythonEnemy.png'
+        //imagen sprite
+        this.imageInstance.frames = 5;
+        this.imageInstance.framesIndex = 0;
     }
 
-    draw() {
-        this.ctx.drawImage(this.imageInstance, this.pythonEnemyPos.x, this.pythonEnemyPos.y, this.pythonEnemySize.w, this.pythonEnemySize.h)
+    draw(framesIndex) {
+        this.ctx.drawImage(this.imageInstance, this.imageInstance.framesIndex * (this.imageInstance.width / this.imageInstance.frames), 0,
+        this.imageInstance.width / this.imageInstance.frames, this.imageInstance.height, 
+        this.pythonEnemyPos.x, this.pythonEnemyPos.y, this.pythonEnemySize.w, this.pythonEnemySize.h)
+        this.animate(framesIndex)
+    }
+
+    animate(framesIndex) {
+        if (framesIndex % 5 == 0) {this.imageInstance.framesIndex++}
+        if (this.imageInstance.framesIndex >= this.imageInstance.frames) {
+        this.imageInstance.framesIndex = 0}
     }
 
     normalize(x, y) {

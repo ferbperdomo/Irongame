@@ -1,5 +1,5 @@
 class Countdown {
-    constructor(ctx, clockPosX = 200, clockPosY = 400) {
+    constructor(ctx, clockPosX = 120, clockPosY = 450) {
       this.currentTime = 0
       this.ctx = ctx
       this.clockPos = {x: clockPosX, y: clockPosY}
@@ -7,7 +7,7 @@ class Countdown {
     }
 
     draw(seconds) {
-        this.ctx.font = "450px sans-serif"
+        this.ctx.font = "350px 'Press Start 2P'"
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)'
         if (seconds < 10) {
             seconds = `0${seconds}`

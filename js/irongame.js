@@ -17,6 +17,10 @@ const irongame = {
     gameLimits: {l: 90, r: 770, t: 50, b: 400},
     randomSize: 1,
     intervalID: undefined,
+    audio: undefined,
+
+
+    // Init to call functions
 
     init() {
         this.setContext()
@@ -30,12 +34,19 @@ const irongame = {
         this.drawAll()
         this.setEventHandlers()
         this.clearAll()
+        this.backgroundAudio = new Audio ('./audios/backgroundAudio.wav')
     },
+
+    //Context 
 
     setContext() {
         this.ctx = document.querySelector('#myCanvas').getContext('2d')
+        this.ctx.fillStyle = "#FF0000"
+
         console.log(this.ctx)
     },
+
+    //Call and draw
 
     drawAll() {
         this.intervalID = setInterval(() => {
@@ -43,7 +54,7 @@ const irongame = {
         this.getRandomW()
         this.framesIndex % 80 === 0 ? this.createPythonEnemy() : null
         this.framesIndex % 40 === 0 ? this.createOctoEnemy() : null
-        this.framesIndex % 300 === 0 ? this.createBonus() : null
+        this.framesIndex % 800 === 0 ? this.createBonus() : null
         this.framesIndex % 50 === 0 && this.seconds--
         this.clearAll()
         this.drawBackgroud()
@@ -57,30 +68,10 @@ const irongame = {
         this.checkPlayerOctoCollision()
         this.checkBulletEnemyCollision()
         this.checkPlayerBonusCollision()
-        this.bullets.forEach((bullet) => { bullet.draw()})
-        this.pythonEnemies.forEach(enemy => { enemy.move(this.player.playerPos)
-            enemy.draw()})
-        this.octoEnemies.forEach(enemy => { enemy.move(this.player.playerPos)
-                enemy.draw()})
+        this.bullets.forEach((bullet) => {bullet.draw(this.framesIndex)})
         this.checkLife()
         this.checkLife() ? this.gameOver() : null
     }, 20)
-    },
-
-    createBackground() {
-        this.background = new Background (this.ctx, 0, 0, this.gameSize.w, this.gameSize.h)
-    },
-    
-    drawBackgroud() {
-       this.background.draw()
-    },
-
-    createPlayer() {
-        this.player = new Player (this.ctx, 450, 250, 50, 50)
-    },
-
-    drawPlayer() {
-        this.player.draw()
     },
 
     clearAll() {
@@ -110,15 +101,32 @@ const irongame = {
         })
     },
 
+    //Create and draw characters and elements
+
+    createBackground() {
+        this.background = new Background (this.ctx, 0, 0, this.gameSize.w, this.gameSize.h)
+    },
+    
+    drawBackgroud() {
+       this.background.draw()
+    },
+
+    createPlayer() {
+        this.player = new Player (this.ctx, 450, 250, 50, 50)
+    },
+
+    drawPlayer() {
+        this.player.draw()
+    },
+
     createPythonEnemy() {
-        const newEnemy = new PythonEnemy (this.ctx, this.getRandomX(), this.getRandomY(), 80, 80, this.gameLimits, this.playerPos)
+        const newEnemy =  new PythonEnemy (this.ctx, this.getRandomX(), this.getRandomY(), 80, 80, this.gameLimits, this.playerPos)
         this.pythonEnemies.push(newEnemy)
     },
 
     drawPythonEnemy() {
-        this.pythonEnemies.forEach(pythonEnemy => {
-            pythonEnemy.draw()
-        })
+        this.pythonEnemies.forEach((pythonEnemy) => {pythonEnemy.move(this.player.playerPos)
+        pythonEnemy.draw(this.framesIndex)})
     },
 
     createOctoEnemy() {
@@ -127,9 +135,8 @@ const irongame = {
     },
     
     drawOctoEnemy() {
-        this.octoEnemies.forEach(octoEnemy => {
-            octoEnemy.draw()
-        })  
+        this.octoEnemies.forEach((octoEnemy) => {octoEnemy.move(this.player.playerPos)
+            octoEnemy.draw()})
     },
 
     clearBullets() {
@@ -155,7 +162,7 @@ const irongame = {
     drawCountdown() {
         this.countdown.draw(this.seconds)
         if(this.seconds === 0) {
-            alert('YOU WON!')
+            // alert('YOU WON!')
         }
     },
 
@@ -166,20 +173,22 @@ const irongame = {
     drawLifeBar() {
         this.lifeBar.draw(this.player.playerHealth);
     },
+
+    //Get random input
     
     getRandomY() {
         const random = Math.floor(Math.random() * (this.gameLimits.b - 80 - this.gameLimits.t) + this.gameLimits.t)
-        if (this.player.playerPos.y +100 >= random &&
-            this.player.playerPos.y  <= random) {
-            return 100
+        if (this.player.playerPos.y + this.player.playerSize.h + 50 > random &&
+            this.player.playerPos.y - 50 < random) {
+            return 375
         } else return random
     },
 
     getRandomX() {
         const random = Math.floor(Math.random() * (this.gameLimits.r - 80 - this.gameLimits.l) + this.gameLimits.l)
-        if (this.player.playerPos.x +100 >= random &&
-            this.player.playerPos.x <= random) {
-            return 700
+        if (this.player.playerPos.x + this.player.playerSize.w + 50 > random &&
+            this.player.playerPos.x - 50 < random) {
+            return 600
         } else return random
     },
 
@@ -187,6 +196,8 @@ const irongame = {
         const random = Math.floor(Math.random() * (50 - 15) + 15)
         this.randomSize = random
     },
+
+    //Internal collisions
 
     checkPlayerPythonCollision() {
         this.pythonEnemies.forEach((pythonEnemy, i) => {        
@@ -249,13 +260,15 @@ const irongame = {
           })
         })
     },
+
+    //Final game
   
     checkLife() {
         // console.log(this.player.playerHealth)
         if (this.player.playerHealth === 0) {
             clearInterval(this.intervalID)
             // alert('You died') 
-            // window.location.reload(false)
+            window.location.reload(false)
         }
 
     },
@@ -263,6 +276,7 @@ const irongame = {
     gameOver() {
         clearInterval(this.interval)
     },
+
 
 }
 

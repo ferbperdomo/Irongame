@@ -1,10 +1,12 @@
-window.onload = () => irongame.init('myCanvas')
-// {
-// document.getElementById('start-button').onclick = () => {
-//     startGame()
-//   }
+let hasStarted = false
 
-//   function startGame() {
-    
-//   }
-// }
+window.onload = () => {
+document.getElementById('start-button').onclick = () => {
+    if (!hasStarted) startGame()
+  }
+
+  function startGame() {
+        irongame.init()
+        hasStarted = true
+  }
+}

@@ -3,14 +3,18 @@
     padding: 0;
     background-color: black;
     color: white;
+    font-family: 'Press Start 2P';
+    
 }
 
-/* body {
+#alter-background {
+    margin: 0;
+    width: 900px;
+    height: 500px;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    margin-top: 120px;
-} */
+}
 
 #game-board{
     margin: 0;
@@ -19,7 +23,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
 }
 
 button {
@@ -29,17 +32,19 @@ button {
     padding: 20px 40px;
     border: 0;
     border-radius: 5px;
-    margin-left: 170px;
+    margin-left: 140px;
+    margin-top: 30px;
 } 
   
 h1 {
     text-transform: uppercase;
     text-align: center;
     color: white;
-    font-size: 8em;
+    font-size: 7em;
     margin-left: 40px;
-    padding-top: 10px;
+    padding: 10px;
 }
+
 p {
     text-align: center;
     font-size: 1.3em;
@@ -47,3 +52,4 @@ p {
     margin-left: 40px;
     margin-bottom: 30px;
 }
+
