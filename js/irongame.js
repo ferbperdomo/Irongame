@@ -138,7 +138,7 @@ const irongame = {
     },
 
     createBonus() {
-        const newBonus = new Bonus (this.ctx, this.getRandomX(), this.getRandomY(), 20, 20)
+        const newBonus = new Bonus (this.ctx, this.getRandomX(), this.getRandomY(), 70, 70)
         this.bonus.push(newBonus)
     },
 
@@ -169,13 +169,18 @@ const irongame = {
     
     getRandomY() {
         const random = Math.floor(Math.random() * (this.gameLimits.b - 80 - this.gameLimits.t) + this.gameLimits.t)
-        return random
-       
+        if (this.player.playerPos.y +100 >= random &&
+            this.player.playerPos.y  <= random) {
+            return 100
+        } else return random
     },
 
     getRandomX() {
         const random = Math.floor(Math.random() * (this.gameLimits.r - 80 - this.gameLimits.l) + this.gameLimits.l)
-        return random
+        if (this.player.playerPos.x +100 >= random &&
+            this.player.playerPos.x <= random) {
+            return 700
+        } else return random
     },
 
     getRandomW() {
