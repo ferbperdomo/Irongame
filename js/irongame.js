@@ -10,7 +10,7 @@ const irongame = {
     pythonEnemies: [],
     bonus: [],
     bullets: [],
-    seconds: 5, 
+    seconds: 30, 
     countdown: undefined,
     FPS: 60,
     framesIndex: 0,
