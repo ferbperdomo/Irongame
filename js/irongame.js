@@ -45,7 +45,6 @@ const irongame = {
 
     setContext() {
         this.ctx = document.querySelector('#myCanvas').getContext('2d')
-        console.log(this.ctx)
     },
 
     //Call and draw
@@ -179,7 +178,6 @@ const irongame = {
         this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
         this.ctx.drawImage(this.imageCongrats, 300, 0, 500, 520)
         this.reload()
-
     },
 
     createLifeBar() {
@@ -284,7 +282,6 @@ const irongame = {
     //Final game
   
     checkLife() {
-        // console.log(this.player.playerHealth)
         if (this.player.playerHealth === 0) {
             return true
         }
