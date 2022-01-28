@@ -10,7 +10,7 @@ const irongame = {
     pythonEnemies: [],
     bonus: [],
     bullets: [],
-    seconds: 45, 
+    seconds: 5, 
     countdown: undefined,
     FPS: 60,
     framesIndex: 0,
@@ -59,7 +59,7 @@ const irongame = {
         this.framesIndex++
         this.getRandomW()
         this.framesIndex % 60 === 0 ? this.createPythonEnemy() : null
-        this.framesIndex % 20 === 0 ? this.createOctoEnemy() : null
+        this.framesIndex % 40 === 0 ? this.createOctoEnemy() : null
         this.framesIndex % 500 === 0 ? this.createBonus() : null
         this.framesIndex % 50 === 0 && this.seconds--
         this.clearAll()
@@ -74,7 +74,6 @@ const irongame = {
         this.checkBulletEnemyCollision()
         this.checkPlayerBonusCollision()
         this.bullets.forEach((bullet) => {bullet.draw(this.framesIndex)})
-        // this.checkLife()
         this.checkLife() ? this.gameOver() : null
         this.drawCountdown()
     }, 20)
@@ -170,15 +169,17 @@ const irongame = {
         if(this.seconds <= 0) {
         
         clearInterval(this.intervalID)
-        this.prueba()
+        this.manageWin()
         }
     },
 
-    prueba() {
+    manageWin() {
         this.clearAll()
         this.ctx.fillStyle = 'black'
         this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
         this.ctx.drawImage(this.imageCongrats, 300, 0, 500, 520)
+        this.reload()
+
     },
 
     createLifeBar() {
@@ -296,8 +297,13 @@ const irongame = {
         this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
         this.ctx.drawImage(this.imageLastWill, 100, 0, 550, 550)
         clearInterval(this.intervalID)
-        
+        this.reload()
     },
+
+    reload() {
+        const canvas = document.getElementById('myCanvas')
+        canvas.addEventListener('click', () => window.location.reload(false))
+    }
 
 
 }
