@@ -17,7 +17,7 @@ const irongame = {
     gameLimits: {l: 90, r: 770, t: 50, b: 400},
     randomSize: 1,
     intervalID: undefined,
-    audio: undefined,
+    sound: undefined,
 
 
     // Init to call functions
@@ -33,9 +33,12 @@ const irongame = {
         this.createLifeBar() 
         this.drawAll()
         this.setEventHandlers()
+        this.audio()
         this.clearAll()
         this.imageLastWill = new Image()
         this.imageLastWill.src = "img/last-will.jpeg"
+        this.imageCongrats = new Image()
+        this.imageCongrats.src = "img/congrats.jpg"
     },
 
     //Context 
@@ -50,18 +53,17 @@ const irongame = {
     
     drawAll() {
         backgroundAudio.backgroundAudio.play();
-        backgroundAudio.backgroundAudio.volume = 0.4;
+        backgroundAudio.backgroundAudio.volume = 0.2;
         backgroundAudio.backgroundAudio.loop = true;
         this.intervalID = setInterval(() => {
         this.framesIndex++
         this.getRandomW()
-        this.framesIndex % 180 === 0 ? this.createPythonEnemy() : null
-        this.framesIndex % 140 === 0 ? this.createOctoEnemy() : null
-        this.framesIndex % 800 === 0 ? this.createBonus() : null
+        this.framesIndex % 60 === 0 ? this.createPythonEnemy() : null
+        this.framesIndex % 20 === 0 ? this.createOctoEnemy() : null
+        this.framesIndex % 500 === 0 ? this.createBonus() : null
         this.framesIndex % 50 === 0 && this.seconds--
         this.clearAll()
         this.drawBackgroud()
-        this.drawCountdown()
         this.drawPlayer()
         this.drawBonus()
         this.drawPythonEnemy()
@@ -72,8 +74,9 @@ const irongame = {
         this.checkBulletEnemyCollision()
         this.checkPlayerBonusCollision()
         this.bullets.forEach((bullet) => {bullet.draw(this.framesIndex)})
-        this.checkLife()
+        // this.checkLife()
         this.checkLife() ? this.gameOver() : null
+        this.drawCountdown()
     }, 20)
     },
 
@@ -91,7 +94,7 @@ const irongame = {
             key === 'ArrowDown' ? this.player.moveDown() : null
         })
         document.addEventListener("click", (event) => {
-
+            this.sound.play()            
             const angle = Math.atan2(
               event.clientY - this.gameSize.h / 2,
               event.clientX - this.gameSize.w / 2
@@ -164,9 +167,18 @@ const irongame = {
 
     drawCountdown() {
         this.countdown.draw(this.seconds)
-        if(this.seconds === 0) {
-            
+        if(this.seconds <= 0) {
+        
+        clearInterval(this.intervalID)
+        this.prueba()
         }
+    },
+
+    prueba() {
+        this.clearAll()
+        this.ctx.fillStyle = 'black'
+        this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
+        this.ctx.drawImage(this.imageCongrats, 300, 0, 500, 520)
     },
 
     createLifeBar() {
@@ -177,21 +189,24 @@ const irongame = {
         this.lifeBar.draw(this.player.playerHealth);
     },
     
+    audio(){
+        this.sound = new Audio('./audios/shoot.mp3')
+    },
 
     //Get random input
     
     getRandomY() {
         const random = Math.floor(Math.random() * (this.gameLimits.b - 80 - this.gameLimits.t) + this.gameLimits.t)
-        if (this.player.playerPos.y + this.player.playerSize.h + 50 > random &&
-            this.player.playerPos.y - 50 < random) {
+        if (this.player.playerPos.y + this.player.playerSize.h + 80 > random &&
+            this.player.playerPos.y - 80 < random) {
             return 375
         } else return random
     },
 
     getRandomX() {
         const random = Math.floor(Math.random() * (this.gameLimits.r - 80 - this.gameLimits.l) + this.gameLimits.l)
-        if (this.player.playerPos.x + this.player.playerSize.w + 50 > random &&
-            this.player.playerPos.x - 50 < random) {
+        if (this.player.playerPos.x + this.player.playerSize.w + 80 > random &&
+            this.player.playerPos.x - 80 < random) {
             return 600
         } else return random
     },
@@ -279,7 +294,7 @@ const irongame = {
         backgroundAudio.backgroundAudio.volume = false
         this.ctx.fillStyle = 'black'
         this.ctx.fillRect(0, 0, this.gameSize.w, this.gameSize.h)
-        this.ctx.drawImage(this.imageLastWill, this.gameSize.w/2-this.imageLastWill.width/2, this.gameSize.h/2-this.imageLastWill.height/2)
+        this.ctx.drawImage(this.imageLastWill, 100, 0, 550, 550)
         clearInterval(this.intervalID)
         
     },

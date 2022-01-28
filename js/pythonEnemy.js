@@ -5,7 +5,7 @@ class PythonEnemy {
         this.pythonEnemySize = {w: pythonEnemyWidth, h: pythonEnemyHeight}
         this.gameLimits =  gameLimits
         this.playerPos = playerPos
-        this.speed = 2
+        this.speed = 1
         this.imageInstance = undefined
         this.frames = undefined
         
@@ -14,9 +14,9 @@ class PythonEnemy {
 
     init() {
         this.imageInstance = new Image()
-        this.imageInstance.src = 'img/pythonEnemy.png'
+        this.imageInstance.src = 'img/octoEnemy.png'
         //imagen sprite
-        this.imageInstance.frames = 5
+        this.imageInstance.frames = 7
         this.imageInstance.framesIndex = 0
     }
 

@@ -4,7 +4,7 @@ class OctoEnemy {
         this.octoEnemyPos = {x: octoEnemyX, y: octoEnemyY}
         this.octoEnemySize = {w: octoEnemyWidth, h: octoEnemyHeight}
         this.gameLimits =  gameLimits
-        this.speed = 3
+        this.speed = 2.5
         this.imageInstance = undefined
         
         this.init()
@@ -12,8 +12,8 @@ class OctoEnemy {
 
     init() {
         this.imageInstance = new Image()
-        this.imageInstance.src = 'img/octoEnemy.png'
-        this.imageInstance.frames = 7
+        this.imageInstance.src = 'img/pythonEnemy.png'
+        this.imageInstance.frames = 5
         this.imageInstance.framesIndex = 0
     }
 
